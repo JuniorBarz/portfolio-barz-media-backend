@@ -1,21 +1,40 @@
-# Barz Media API — portfólio técnico
+# Barz Media API
 
-API demonstrativa em FastAPI para distribuir playlists a telas e receber estado de reprodução. Esta edição foi escrita do zero para portfólio e usa somente dados sintéticos em memória.
+API demonstrativa em FastAPI para entregar playlists sintéticas, receber o estado de uma tela e registrar eventos de reprodução em memória.
+
+> Projeto independente escrito para portfólio, usando somente dados sintéticos. Não contém banco, credencial, mídia real, endereço interno, dado de cliente ou código do backend privado.
 
 ## Problema
 
-Uma plataforma de mídia precisa entregar uma playlist consistente a cada tela, validar telemetria recebida e oferecer uma visão operacional simples. A API deve manter contratos claros e falhar sem revelar detalhes de infraestrutura.
+Uma API de mídia precisa definir contratos claros, validar entradas e responder sem revelar detalhes de infraestrutura. Para uma demonstração pública, ela também precisa ser executável sem serviços externos ou dados reais.
 
-## Solução
+## Solução implementada
 
-O serviço expõe endpoints de saúde, playlist, estado da tela, eventos de reprodução e resumo administrativo. Modelos Pydantic limitam tamanho, domínio e faixa dos dados. Um repositório em memória torna o exemplo executável sem banco, credenciais ou serviços externos.
+O serviço reúne endpoints de saúde, playlist, estado da tela, eventos de reprodução e resumo administrativo. Modelos Pydantic limitam tipos, tamanhos e faixas. Um repositório em memória mantém o exemplo pequeno e reproduzível.
+
+## Tecnologias
+
+- Python 3.11;
+- FastAPI e Uvicorn;
+- Pydantic para validação de contratos;
+- Pytest e cliente de testes HTTP;
+- exportador fail-closed com allowlist e aprovação por snapshot.
+
+## Funcionalidades demonstradas
+
+- health check;
+- playlist sintética por tela;
+- validação e atualização do estado da tela;
+- recepção e agregação de eventos de reprodução;
+- visão administrativa resumida em memória;
+- respostas de erro genéricas para entradas inválidas ou telas inexistentes.
 
 ## Arquitetura
 
-- `app/models.py`: contratos e validação;
+- `app/models.py`: modelos e limites dos contratos;
 - `app/store.py`: estado sintético isolado por instância;
-- `app/main.py`: rotas HTTP e tratamento genérico de erros;
-- `tests/`: testes de contrato, mutação de estado e limites.
+- `app/main.py`: rotas HTTP e tratamento de erros;
+- `tests/`: contratos, mutação de estado e limites.
 
 ## Endpoints
 
@@ -26,35 +45,38 @@ O serviço expõe endpoints de saúde, playlist, estado da tela, eventos de repr
 - `GET /api/admin/overview`
 - `GET /docs`
 
-Use `screen-demo` como identificador da demonstração.
+Use `screen-demo` na demonstração. Todos os IDs, URLs e conteúdos retornados são sintéticos.
 
 ## Como executar
 
 ```bash
 python -m venv .venv
-python -m pip install -r requirements.txt
-python -m pytest
-python -m uvicorn app.main:app --reload
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python -m pytest
+.venv\Scripts\python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-A documentação interativa estará em `http://127.0.0.1:8000/docs`.
+A documentação interativa ficará em `http://127.0.0.1:8000/docs`.
+
+## Testes e validação
+
+Os testes exercitam os endpoints, a validação de domínio, o isolamento do estado e os limites dos eventos. O pipeline do portfólio rejeita arquivos fora do manifesto, verifica hashes, procura segredos e exige aprovação vinculada ao snapshot.
 
 ## Segurança
 
-O projeto não contém banco, token, endereço interno, dado de cliente, arquivo de mídia real ou histórico privado. Respostas de erro não expõem caminhos ou infraestrutura. Entradas têm limites explícitos e o pipeline aplica allowlist, scanner independente e aprovação por snapshot.
+Execute somente em `127.0.0.1`. O projeto não possui autenticação, autorização, rate limit, TLS, banco, auditoria persistente ou controles de implantação pública. Ele não deve ser exposto à internet.
 
 ## Limitações
 
-- armazenamento exclusivamente em memória;
-- sem autenticação, autorização, rate limit ou auditoria persistente;
-- uma única tela e duas mídias sintéticas;
-- não indicado para publicação na internet sem as camadas de produção acima;
-- não representa a topologia nem o código do backend privado.
+- armazenamento exclusivamente em memória, perdido ao reiniciar;
+- uma tela e duas mídias sintéticas;
+- sem autenticação, autorização ou persistência;
+- contrato criado apenas para esta demonstração de API;
+- não representa topologia, endpoints nem código do backend privado;
+- não é apresentado como o servidor compatível com o **Barz Player** nesta fase.
 
-## Minha participação
+## Minha participação e direitos
 
-Projeto de autoria própria: desenho de contratos, validação, endpoints, modelo de estado, testes e pipeline seguro de portfólio.
-
-## Uso e contribuições
+Desenho dos contratos, validação, endpoints, modelo de estado, testes, pipeline seguro e documentação: Junior Barz.
 
 Disponível apenas para leitura e avaliação profissional. Não aceita contribuições. Consulte [PORTFOLIO_NOTICE.md](PORTFOLIO_NOTICE.md).
